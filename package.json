@@ -1,0 +1,16 @@
+{
+  "name": "atom-ripper-tags",
+  "main": "./lib/atom-ripper-tags",
+  "version": "0.1.0",
+  "description": "ripper-tags integration for Atom",
+  "keywords": [
+  ],
+  "repository": "https://github.com/atom/atom-ripper-tags",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "chokidar": "latest"
+  }
+}

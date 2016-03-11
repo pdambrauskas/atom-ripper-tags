@@ -1,0 +1,22 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Rebuld ripper-tags'
+      'command': 'atom-ripper-tags:rebuild'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Ripper Tags'
+      'submenu': [
+        {
+          'label': 'Rebuld ripper-tags'
+          'command': 'atom-ripper-tags:rebuild'
+        }
+      ]
+    ]
+  }
+]
