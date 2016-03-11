@@ -5,7 +5,7 @@
   "description": "ripper-tags integration for Atom",
   "keywords": [
   ],
-  "repository": "https://github.com/atom/atom-ripper-tags",
+  "repository": "https://github.com/pdambrauskas/atom-ripper-tags",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
