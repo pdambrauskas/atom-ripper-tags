@@ -17,15 +17,30 @@ module.exports = AtomRipperTags =
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-ripper-tags:rebuild': => @rebuild()
 
-    chokidar.watch(atom.project.getPaths(), { ignored: /[\/\\]\./ })
-      .on('change', => @rebuild() if @isRebuildOnChange())
+    if @isRebuildOnChange()
+      chokidar
+        .watch(
+          @pathsToWatch(),
+          {
+            ignoreInitial: true
+            followSymlinks: false
+            awaitWriteFinish: true
+            usePolling: true
+            interval: 10000
+            binaryInterval: 9999999999 # Binary files are not watched
+          }
+        )
+        .on('change', (event, path) => @rebuild())
 
   deactivate: ->
     subscriptions.dispose()
-    Chokidar.close()
+    chokidar.close()
 
   rebuild: ->
     generator.rebuild()
+
+  pathsToWatch: ->
+    atom.project.getPaths().map (path) -> path + '/**/*.rb'
 
   isRebuildOnChange: ->
     atom.config.get('atom-ripper-tags.rebuildOnFileChange')
