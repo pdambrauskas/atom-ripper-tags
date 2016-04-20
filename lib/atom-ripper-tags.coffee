@@ -21,7 +21,7 @@ module.exports = AtomRipperTags =
       .on('change', => @rebuild() if @isRebuildOnChange())
 
   deactivate: ->
-    csubscriptions.dispose()
+    subscriptions.dispose()
     Chokidar.close()
 
   rebuild: ->
