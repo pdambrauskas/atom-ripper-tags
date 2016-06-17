@@ -9,7 +9,7 @@ module.exports = AtomRipperTags =
       default: '/usr/local/bin/'
     rebuildOnFileChange:
       type: 'boolean'
-      default: true
+      default: false
   generator: null
   subscriptions: null
 
