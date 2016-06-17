@@ -1,12 +1,21 @@
 {BufferedProcess} = require 'atom'
 path = require 'path'
+exec = require('child_process').exec
 
 module.exports =
   rebuild: ->
-    args = ['-R', "--tag-file=#{path.join(atom.project.getPaths()[0], '.tags')}"]
+    projectPath = atom.project.getPaths()[0]
+    args = [
+      '-R',
+      "--tag-file=#{path.join(projectPath, '.tags')}",
+      '--recursive',
+      '--tag-relative',
+      '--force',
+    ]
+
     execPath = atom.config.get('atom-ripper-tags.executablePath')
-    command = path.join execPath, 'ripper-tags'
-    new BufferedProcess({command, args, @errorCallback, @errorCallback})
+    command = "cd #{projectPath}; #{path.join(execPath, 'ripper-tags')} #{args.join(' ')}"
+    exec command, @errorCallback
 
   errorCallback: (error) =>
-    atom.notifications.addError(error.toString())
+    atom.notifications.addError(error) if error
