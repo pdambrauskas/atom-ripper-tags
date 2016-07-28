@@ -10,27 +10,35 @@ module.exports = AtomRipperTags =
     rebuildOnFileChange:
       type: 'boolean'
       default: false
-  generator: null
-  subscriptions: null
+    rebuildInterval:
+      type: 'integer'
+      default: 600
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-ripper-tags:rebuild': => @rebuild()
 
     if @isRebuildOnChange()
-      chokidar
-        .watch(
-          @pathsToWatch(),
-          {
-            ignoreInitial: true
-            followSymlinks: false
-            awaitWriteFinish: true
-            usePolling: true
-            interval: 10000
-            binaryInterval: 9999999999 # Binary files are not watched
-          }
-        )
-        .on('change', (event, path) => @rebuild())
+      @watchChanges()
+
+    rebuildInterval = @getRebuildInterval() * 1000
+    if rebuildInterval > 0
+      setInterval((=> @rebuild()), rebuildInterval)
+
+  watchChanges: ->
+    chokidar
+      .watch(
+        @getPathsToWatch(),
+        {
+          ignoreInitial: true
+          followSymlinks: false
+          awaitWriteFinish: true
+          usePolling: true
+          interval: 10000
+          binaryInterval: 9999999999 # Binary files are not watched
+        }
+      )
+      .on('change', (event, path) => @rebuild())
 
   deactivate: ->
     subscriptions.dispose()
@@ -39,8 +47,11 @@ module.exports = AtomRipperTags =
   rebuild: ->
     generator.rebuild()
 
-  pathsToWatch: ->
+  getPathsToWatch: ->
     atom.project.getPaths().map (path) -> path + '/**/*.rb'
 
   isRebuildOnChange: ->
     atom.config.get('atom-ripper-tags.rebuildOnFileChange')
+
+  getRebuildInterval: ->
+    atom.config.get('atom-ripper-tags.rebuildInterval')
